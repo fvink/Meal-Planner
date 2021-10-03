@@ -1,0 +1,26 @@
+CREATE TABLE IngredientDbModel(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+amount REAL NOT NULL,
+unit TEXT NOT NULL,
+calories REAL NOT NULL,
+protein REAL NOT NULL,
+carbs REAL NOT NULL,
+fat REAL NOT NULL
+);
+
+selectAll:
+SELECT * FROM IngredientDbModel;
+
+selectById:
+SELECT * FROM IngredientDbModel WHERE id = ?;
+
+selectByName:
+SELECT * FROM IngredientDbModel WHERE name LIKE ? COLLATE NOCASE;
+
+insertIngredient:
+INSERT OR IGNORE INTO IngredientDbModel(id, name, amount, unit, calories, protein, carbs, fat)
+VALUES (?,?,?, ?, ?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM IngredientDbModel;

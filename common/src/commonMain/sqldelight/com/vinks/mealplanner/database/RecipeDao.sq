@@ -1,0 +1,22 @@
+CREATE TABLE RecipeDbModel(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+calories REAL,
+protein REAL,
+carbs REAL,
+fat REAL,
+steps TEXT
+);
+
+selectById:
+SELECT * FROM RecipeDbModel WHERE id = ?;
+
+selectByName:
+SELECT * FROM RecipeDbModel WHERE name LIKE ?;
+
+insertRecipe:
+INSERT OR IGNORE INTO RecipeDbModel(id, name, calories, protein, carbs, fat, steps)
+VALUES (?,?,?,?,?,?,?);
+
+deleteAll:
+DELETE FROM RecipeDbModel;

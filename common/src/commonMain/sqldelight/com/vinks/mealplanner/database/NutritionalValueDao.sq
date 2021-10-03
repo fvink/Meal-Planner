@@ -1,0 +1,19 @@
+CREATE TABLE NutritionalValueDbModel(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+amount REAL NOT NULL,
+unit TEXT NOT NULL,
+calories REAL,
+protein REAL,
+carbs REAL,
+fat REAL
+);
+
+selectById:
+SELECT * FROM NutritionalValueDbModel WHERE id = ?;
+
+insertNutritionalValue:
+INSERT OR IGNORE INTO NutritionalValueDbModel(id, amount, unit, calories, protein, carbs, fat)
+VALUES (?,?,?,?,?,?,?);
+
+deleteAll:
+DELETE FROM NutritionalValueDbModel;

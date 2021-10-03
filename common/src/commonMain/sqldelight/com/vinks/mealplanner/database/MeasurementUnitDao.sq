@@ -1,0 +1,20 @@
+CREATE TABLE MeasurementUnitDbModel(
+abbreviation TEXT NOT NULL PRIMARY KEY,
+name TEXT NOT NULL UNIQUE
+);
+
+selectAll:
+SELECT * FROM MeasurementUnitDbModel;
+
+selectByName:
+SELECT * FROM MeasurementUnitDbModel WHERE name = ? COLLATE NOCASE;
+
+selectByAbbreviation:
+SELECT * FROM MeasurementUnitDbModel WHERE abbreviation = ? COLLATE NOCASE;
+
+insertMeasurementUnit:
+INSERT OR IGNORE INTO MeasurementUnitDbModel(abbreviation, name)
+VALUES (?,?);
+
+deleteAll:
+DELETE FROM MeasurementUnitDbModel;

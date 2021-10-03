@@ -4,6 +4,8 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
+    id("kotlinx-serialization")
+    id("com.squareup.sqldelight")
 }
 
 version = "1.0"
@@ -38,13 +40,21 @@ kotlin {
 
     sourceSets["commonMain"].dependencies {
         implementation(Deps.Coroutines.common)
-        implementation(Deps.koinCore)
+        implementation(Deps.Koin.koinCore)
+        implementation(Deps.Ktor.commonCore)
+        implementation(Deps.Ktor.commonJson)
+        implementation(Deps.Ktor.commonLogging)
+        implementation(Deps.Ktor.serialization)
+        implementation(Deps.Kotlin.serialization)
+        implementation(Deps.SqlDelight.runtime)
+        implementation(Deps.SqlDelight.coroutinesExtensions)
+        api(Deps.napier)
     }
 
     sourceSets["commonTest"].dependencies {
         implementation(Deps.KotlinTest.common)
         implementation(Deps.KotlinTest.annotations)
-        implementation(Deps.koinTest)
+        implementation(Deps.Koin.koinTest)
     }
 
     sourceSets.matching { it.name.endsWith("Test") }
@@ -54,7 +64,11 @@ kotlin {
 
     sourceSets["androidMain"].dependencies {
         implementation(kotlin("stdlib", Versions.kotlin))
+        implementation(Deps.Koin.koinCore)
+        implementation(Deps.Koin.koinAndroid)
         implementation(Deps.Coroutines.android)
+        implementation(Deps.SqlDelight.driverAndroid)
+        implementation(Deps.Ktor.okhttp)
     }
 
     sourceSets["androidTest"].dependencies {
@@ -73,6 +87,9 @@ kotlin {
                 strictly(Versions.coroutines)
             }
         }
+        implementation(Deps.Koin.koinCore)
+        implementation(Deps.SqlDelight.driverIos)
+        implementation(Deps.Ktor.ios)
     }
 }
 
@@ -84,4 +101,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+}
+
+sqldelight {
+    database("AppDatabase") {
+        packageName = "com.vinks.mealplanner.db"
+    }
 }

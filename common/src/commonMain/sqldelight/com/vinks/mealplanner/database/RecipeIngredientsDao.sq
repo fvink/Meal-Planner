@@ -1,0 +1,22 @@
+CREATE TABLE RecipeIngredientsDbModel(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+amount REAL NOT NULL,
+unit TEXT NOT NULL,
+recipeId INTEGER NOT NULL,
+ingredientId INTEGER NOT NULL,
+FOREIGN KEY(recipeId) REFERENCES RecipeDbModel(id),
+FOREIGN KEY(ingredientId) REFERENCES IngredientDbModel(id)
+);
+
+selectByRecipeId:
+SELECT * FROM RecipeIngredientsDbModel WHERE recipeId = ?;
+
+selectByIngredientId:
+SELECT * FROM RecipeIngredientsDbModel WHERE ingredientId = ?;
+
+insertRecipeIngredients:
+INSERT OR IGNORE INTO RecipeIngredientsDbModel(id, amount, unit, recipeId, ingredientId)
+VALUES (?,?,?,?,?);
+
+deleteAll:
+DELETE FROM RecipeIngredientsDbModel;

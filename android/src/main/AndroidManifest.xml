@@ -2,12 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vinks.mealplanner.android">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name="com.vinks.mealplanner.MealPlannerApplication"
         android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.vinks.mealplanner.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
