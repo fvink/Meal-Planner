@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.vinks.mealplanner.domain.model.Ingredient
+import com.vinks.mealplanner.domain.model.Meal
+import com.vinks.mealplanner.domain.model.MealPlan
 import com.vinks.mealplanner.theme.AppTheme
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.launchIn
@@ -34,7 +36,9 @@ import java.time.LocalDate
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel) {
 
-    val ingredients by homeViewModel.uiState.collectAsState()
+    val mealPlans by homeViewModel.uiState.collectAsState()
+    val mealPlan = mealPlans.firstOrNull()
+    val meals = mealPlan?.dailyPlans?.map { it.meals }.orEmpty().flatten()
 
     BackdropScaffold(
         scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed),
@@ -42,7 +46,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             Box {}
         },
         backLayerContent = {
-            DailyCaloricStatsContent(ingredients)
+            DailyCaloricStatsContent(meals)
         },
         frontLayerContent = {
 
@@ -52,7 +56,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 }
 
 @Composable
-fun DailyCaloricStatsContent(ingredients: List<Ingredient>) {
+fun DailyCaloricStatsContent(meals: List<Meal>) {
     Napier.d("SHOWING INGREDS")
     LazyColumn(
         modifier = Modifier
@@ -60,8 +64,9 @@ fun DailyCaloricStatsContent(ingredients: List<Ingredient>) {
             .fillMaxWidth()
             .background(Color(AppTheme.Colors.primaryDark)),
     ) {
-        items(ingredients.size) { index ->
-            Text(text = ingredients[index].name)
+
+        items(meals.size) { index ->
+            Text(text = meals[index].name)
         }
     }
 }

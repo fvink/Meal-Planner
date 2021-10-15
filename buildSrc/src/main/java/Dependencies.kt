@@ -7,7 +7,8 @@ object Versions {
     val android_gradle_plugin = "7.0.2"
     val buildToolsVersion = "30.0.3"
 
-    val kotlinSerializationJson = "1.3.0"
+    val kotlinxSerializationJson = "1.3.0"
+    val kotlinxDateTime = "0.3.0"
     val coroutines = "1.5.2-native-mt"
     val koin = "3.0.2"
     val ktor = "1.6.4"
@@ -34,7 +35,8 @@ object Deps {
     val napier = "io.github.aakira:napier:${Versions.napier}"
 
     object Kotlin {
-        val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinSerializationJson}"
+        val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerializationJson}"
+        val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:${Versions.kotlinxDateTime}"
     }
 
     object Koin {

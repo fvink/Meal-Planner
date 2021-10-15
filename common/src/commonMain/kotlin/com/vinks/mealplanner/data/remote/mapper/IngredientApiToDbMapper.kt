@@ -11,12 +11,12 @@ class IngredientApiToDbMapper : Mapper<IngredientApiModel, IngredientDbModel> {
             IngredientDbModel(
                 id,
                 name,
-                nutritionalValueApiModel.quantityApiModel!!.amount,
+                nutritionalValueApiModel.quantityApiModel.amount,
                 nutritionalValueApiModel.quantityApiModel.unit,
-                nutritionalValueApiModel.calories!!,
-                nutritionalValueApiModel.protein!!,
-                nutritionalValueApiModel.carbs!!,
-                nutritionalValueApiModel.fat!!
+                nutritionalValueApiModel.calories,
+                nutritionalValueApiModel.protein,
+                nutritionalValueApiModel.carbs,
+                nutritionalValueApiModel.fat
             )
         }
 }

@@ -46,6 +46,7 @@ kotlin {
         implementation(Deps.Ktor.commonLogging)
         implementation(Deps.Ktor.serialization)
         implementation(Deps.Kotlin.serialization)
+        api(Deps.Kotlin.dateTime)
         implementation(Deps.SqlDelight.runtime)
         implementation(Deps.SqlDelight.coroutinesExtensions)
         api(Deps.napier)

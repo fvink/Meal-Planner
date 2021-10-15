@@ -1,4 +1,4 @@
-package com.vinks.mealplanner.data.local
+package com.vinks.mealplanner.data.local.cache
 
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList

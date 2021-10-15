@@ -1,6 +1,6 @@
 package com.vinks.mealplanner.data.repository
 
-import com.vinks.mealplanner.data.local.IngredientCache
+import com.vinks.mealplanner.data.local.cache.IngredientCache
 import com.vinks.mealplanner.data.local.mapper.IngredientDbToDomainMapper
 import com.vinks.mealplanner.data.remote.api.IngredientApi
 import com.vinks.mealplanner.data.remote.mapper.IngredientApiToDbMapper

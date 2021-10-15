@@ -45,4 +45,22 @@ val ktorHttpClient = HttpClient {
         }
         level = LogLevel.BODY
     }
+
+//    install(DataConversion) {
+//        convert<DateTime> {
+//            val dateFormat = DateFormat("yyyy-MM-ddThh:mm:ssZ")
+//
+//            decode { values ->
+//                values.singleOrNull()?.let { dateFormat.parseUtc(it) }
+//            }
+//
+//            encode { value ->
+//                when (value) {
+//                    null -> listOf()
+//                    is DateTime -> listOf(dateFormat.format(value))
+//                    else -> throw DataConversionException("Cannot convert $value as DateTime")
+//                }
+//            }
+//        }
+//    }
 }

@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NutritionalValueApiModel(
-    @SerialName("quantity") val quantityApiModel: QuantityApiModel?,
-    @SerialName("calories") val calories: Double?,
-    @SerialName("protein") val protein: Double?,
-    @SerialName("carbs") val carbs: Double?,
-    @SerialName("fat") val fat: Double?
+    @SerialName("quantity") val quantityApiModel: QuantityApiModel,
+    @SerialName("calories") val calories: Double,
+    @SerialName("protein") val protein: Double,
+    @SerialName("carbs") val carbs: Double,
+    @SerialName("fat") val fat: Double
 )
