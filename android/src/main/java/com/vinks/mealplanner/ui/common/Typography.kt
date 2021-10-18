@@ -1,4 +1,4 @@
-package com.vinks.mealplanner.ui
+package com.vinks.mealplanner.ui.common
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

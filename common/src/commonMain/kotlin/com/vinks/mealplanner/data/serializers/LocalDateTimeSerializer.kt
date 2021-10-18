@@ -15,6 +15,6 @@ object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
     override fun serialize(encoder: Encoder, value: LocalDateTime) = encoder.encodeString(value.toString())
 
     // dates comes in from backend in the format of "2021-10-11T00:00:00Z". we need to drop 'Z' because kotlinx.datetime cannot parse this
-    // format and custom formatters are not yet supported
+    // format and custom formatters are not yet supported by kotlinx.datetime
     override fun deserialize(decoder: Decoder): LocalDateTime = LocalDateTime.parse(decoder.decodeString().dropLast(1))
 }

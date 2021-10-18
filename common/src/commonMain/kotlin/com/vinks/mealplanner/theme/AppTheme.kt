@@ -2,11 +2,11 @@ package com.vinks.mealplanner.theme
 
 object AppTheme {
     object Colors {
-        const val primaryDark = 0xFF2A3342
+        const val primaryDark = 0xFF000000
         const val textGray = 0xFF848D99
-    }
-
-    object TextStyle {
-
+        const val textLighterGray = 0XFFAAAFB7
+        const val white = 0xFFFFFFFF
+        const val bgDatePickerSelectedDate = 0xFF3B6FD6
+        const val progressBarEmpty = 0x23FFFFFF
     }
 }

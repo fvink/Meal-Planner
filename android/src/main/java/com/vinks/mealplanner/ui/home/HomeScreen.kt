@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -15,22 +13,16 @@ import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import com.vinks.mealplanner.domain.model.Ingredient
-import com.vinks.mealplanner.domain.model.Meal
-import com.vinks.mealplanner.domain.model.MealPlan
 import com.vinks.mealplanner.theme.AppTheme
-import io.github.aakira.napier.Napier
-import kotlinx.coroutines.flow.launchIn
-import java.time.LocalDate
+import com.vinks.mealplanner.ui.home.dailystats.DailyStats
+import com.vinks.mealplanner.ui.home.dailystats.DailyStatsUiState
+import kotlinx.datetime.LocalDate
 
 @ExperimentalMaterialApi
 @Composable
@@ -40,13 +32,17 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
     val mealPlan = mealPlans.firstOrNull()
     val meals = mealPlan?.dailyPlans?.map { it.meals }.orEmpty().flatten()
 
+    val selectedDate = remember { mutableStateOf(LocalDate(2021, 9, 18)) }
+
     BackdropScaffold(
         scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed),
         appBar = {
             Box {}
         },
         backLayerContent = {
-            DailyCaloricStatsContent(meals)
+            HomeContent(previewUiState.copy(selectedDate = selectedDate.value)) {
+                selectedDate.value = it
+            }
         },
         frontLayerContent = {
 
@@ -56,29 +52,42 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 }
 
 @Composable
-fun DailyCaloricStatsContent(meals: List<Meal>) {
-    Napier.d("SHOWING INGREDS")
-    LazyColumn(
+fun HomeContent(
+    uiState: DailyStatsUiState,
+    onDateSelected: (date: LocalDate) -> Unit
+) {
+    Column(
         modifier = Modifier
             .height(400.dp)
             .fillMaxWidth()
             .background(Color(AppTheme.Colors.primaryDark)),
     ) {
-
-        items(meals.size) { index ->
-            Text(text = meals[index].name)
-        }
-    }
-}
-
-@Composable
-fun DatePicker(dates: List<LocalDate>) {
-    LazyRow {
-        items(dates.size) { index ->
-            Text(
-                text = dates[index].dayOfMonth.toString(),
-                color = Color(AppTheme.Colors.textGray),
+        when (uiState) {
+            is DailyStatsUiState.Data -> DailyStats(
+                state = uiState,
+                onDateSelected = onDateSelected
             )
+            else -> Text(text = "Loading...")
         }
     }
 }
+
+@Preview
+@Composable
+fun HomeContentPreview() {
+    HomeContent(uiState = previewUiState, {})
+}
+
+val previewUiState = DailyStatsUiState.Data(
+    LocalDate(2021, 9, 18),
+    LocalDate(2021, 9, 18),
+    2100,
+    1500,
+    600,
+    140,
+    100,
+    100,
+    90,
+    90,
+    50
+)
