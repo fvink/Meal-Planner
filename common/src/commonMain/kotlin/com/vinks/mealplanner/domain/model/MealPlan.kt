@@ -1,14 +1,14 @@
 package com.vinks.mealplanner.domain.model
 
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 
 data class MealPlan(
     val id: Long,
     val name: String,
-    val startDate: LocalDateTime,
-    val dailyPlans: List<DailyPlan>
+    val startDate: LocalDate,
+    val dailyMealPlans: List<DailyMealPlan>
 )
 
-data class DailyPlan(
+data class DailyMealPlan(
     val meals: List<Meal>
 )

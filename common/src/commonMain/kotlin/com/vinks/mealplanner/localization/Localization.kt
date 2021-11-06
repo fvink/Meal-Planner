@@ -1,5 +1,7 @@
 package com.vinks.mealplanner.localization
 
+import io.github.aakira.napier.Napier
+
 object Localization {
     internal var translations = emptyMap<String, String>()
         private set
@@ -13,5 +15,8 @@ object Localization {
 }
 
 fun String.localized(): String {
-    return Localization.translations[this.lowercase()] ?: throw IllegalArgumentException("No translation found for $this")
+    return Localization.translations[this.lowercase()] ?: run {
+        Napier.e("No translation found for $this")
+        this
+    }
 }

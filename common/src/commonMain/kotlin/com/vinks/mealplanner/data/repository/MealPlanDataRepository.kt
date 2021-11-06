@@ -5,6 +5,7 @@ import com.vinks.mealplanner.data.remote.api.MealPlanApi
 import com.vinks.mealplanner.data.remote.mapper.MealPlanApiToDomainMapper
 import com.vinks.mealplanner.domain.model.MealPlan
 import com.vinks.mealplanner.domain.repository.MealPlanRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
@@ -20,7 +21,15 @@ class MealPlanDataRepository(
     private val backgroundDispatcher: CoroutineDispatcher
 ) : MealPlanRepository {
 
-    override fun getAllMealPlans(refreshCache: Boolean): Flow<List<MealPlan>> = flow {
+    override suspend fun getAllMealPlans(refreshCache: Boolean): List<MealPlan> {
+        val cachedData = cache.getAllMealPlans().first()
+        if (cachedData != null && !refreshCache) {
+            return cachedData
+        }
+        return fetchMealPlans()
+    }
+
+    override fun getAllMealPlansFlow(refreshCache: Boolean): Flow<List<MealPlan>> = flow {
         val cachedData = cache.getAllMealPlans().first()
         cachedData?.let { emit(it) }
 
@@ -33,8 +42,17 @@ class MealPlanDataRepository(
     }.flowOn(backgroundDispatcher)
 
     private suspend fun refreshMealPlans() {
+        try {
+            val mealPlans = fetchMealPlans()
+            cache.deleteAllMealPlans()
+            cache.saveMealPlans(mealPlans)
+        } catch (e: Throwable) {
+            Napier.e(e.message.orEmpty())
+        }
+    }
+
+    private suspend fun fetchMealPlans(): List<MealPlan> {
         val mealPlans = api.getAllMealPlans()
-        cache.deleteAllMealPlans()
-        cache.saveMealPlans(apiToDomainMapper.mapList(mealPlans))
+        return apiToDomainMapper.mapList(mealPlans)
     }
 }

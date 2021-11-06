@@ -17,6 +17,8 @@ import com.vinks.mealplanner.data.repository.MealPlanDataRepository
 import com.vinks.mealplanner.db.AppDatabase
 import com.vinks.mealplanner.domain.repository.IngredientRepository
 import com.vinks.mealplanner.domain.repository.MealPlanRepository
+import com.vinks.mealplanner.presentation.home.GetDailyFoodConsumptionStats
+import com.vinks.mealplanner.presentation.home.GetDailyMealPlan
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -38,4 +40,8 @@ val dataModule = module {
     factory { MealPlanApiToDomainMapper(get()) }
     factory { NutritionalValueApiToDomainMapper() }
     factory { RecipeApiToDomainMapper(get()) }
+
+    factory { GetDailyMealPlan(get()) }
+    factory { GetDailyFoodConsumptionStats() }
+
 }

@@ -3,8 +3,9 @@ package com.vinks.mealplanner.data.remote.mapper
 import com.vinks.mealplanner.data.remote.model.MealApiModel
 import com.vinks.mealplanner.data.remote.model.MealPlanApiModel
 import com.vinks.mealplanner.domain.mapper.Mapper
-import com.vinks.mealplanner.domain.model.DailyPlan
+import com.vinks.mealplanner.domain.model.DailyMealPlan
 import com.vinks.mealplanner.domain.model.MealPlan
+import kotlinx.datetime.LocalDate
 
 class MealPlanApiToDomainMapper(
     private val mealApiToDomainMapper: MealApiToDomainMapper
@@ -15,14 +16,14 @@ class MealPlanApiToDomainMapper(
             MealPlan(
                 id,
                 name,
-                dateStarted,
+                LocalDate(dateStarted.year, dateStarted.monthNumber, dateStarted.dayOfMonth),
                 mapDailyPlans(meals)
             )
         }
 
-    private fun mapDailyPlans(meals: List<List<MealApiModel>>): List<DailyPlan> {
+    private fun mapDailyPlans(meals: List<List<MealApiModel>>): List<DailyMealPlan> {
         return meals.map {
-            DailyPlan(mealApiToDomainMapper.mapList(it))
+            DailyMealPlan(mealApiToDomainMapper.mapList(it))
         }
     }
 }

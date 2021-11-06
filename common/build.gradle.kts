@@ -65,6 +65,7 @@ kotlin {
 
     sourceSets["androidMain"].dependencies {
         implementation(kotlin("stdlib", Versions.kotlin))
+        implementation(Deps.AndroidX.lifecycleViewModelExtensions)
         implementation(Deps.Koin.koinCore)
         implementation(Deps.Koin.koinAndroid)
         implementation(Deps.Coroutines.android)

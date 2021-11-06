@@ -1,4 +1,4 @@
-package com.vinks.mealplanner.ui.home.dailystats
+package com.vinks.mealplanner.presentation.home.dailystats
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -22,48 +22,28 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vinks.mealplanner.localization.localized
+import com.vinks.mealplanner.presentation.common.appTypography
+import com.vinks.mealplanner.presentation.home.HomeViewState
+import com.vinks.mealplanner.presentation.home.homeViewStatePreview
+import com.vinks.mealplanner.presentation.util.screenWidth
 import com.vinks.mealplanner.theme.AppTheme
-import com.vinks.mealplanner.ui.common.appTypography
-import com.vinks.mealplanner.ui.home.previewUiState
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-
-@Composable
-fun DailyStats(
-    state: DailyStatsUiState.Data,
-    onDateSelected: (date: LocalDate) -> Unit
-) {
-    Column {
-        Spacer(modifier = Modifier.padding(top = 40.dp))
-        DatePicker(
-            currentDate = state.currentDate,
-            selectedDate = state.selectedDate,
-            onDateSelected = onDateSelected
-        )
-        Spacer(modifier = Modifier.padding(top = 10.dp))
-        CalorieStats(state = state)
-    }
-}
-
-@Preview(
-    showBackground = true,
-    backgroundColor = AppTheme.Colors.primaryDark
-)
-@Composable
-fun DateStatsPreview() {
-    DailyStats(state = previewUiState, {})
-}
 
 @Composable
 fun DatePicker(
@@ -72,38 +52,61 @@ fun DatePicker(
     onDateSelected: (date: LocalDate) -> Unit
 ) {
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+    var selectedIndex by remember { mutableStateOf(selectedDate.dayOfMonth - 1) }
 
     val daysInCurrentMonth = currentDate.month.length(false)
 
-    val context = LocalContext.current.resources
-    val displayMetrics = context.displayMetrics
-    val screenWidth = (displayMetrics.widthPixels / displayMetrics.density).dp
+    val screenWidth = LocalContext.current.screenWidth()
 
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        state = listState,
-        contentPadding = PaddingValues(start = screenWidth / 2 - 20.dp, end = screenWidth / 2 - 20.dp)
-    ) {
-        items(daysInCurrentMonth) { index ->
-            DatePickerItem(
-                dayOfMonth = index + 1,
-                isCurrentDate = currentDate.dayOfMonth == index + 1,
-                isSelected = selectedDate.dayOfMonth == index + 1,
-                onDaySelected = { dayOfMonth ->
-                    onDateSelected(
-                        with(currentDate) {
-                            LocalDate(year, month, dayOfMonth)
-                        }
-                    )
-                }
+    Column {
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = selectedDate.month.name,
+            style = appTypography.body2.copy(
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp,
+                color = Color(AppTheme.Colors.white)
             )
-        }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            state = listState,
+            contentPadding = PaddingValues(start = screenWidth / 2 - 20.dp, end = screenWidth / 2 - 20.dp)
+        ) {
+            items(daysInCurrentMonth) { index ->
+                DatePickerItem(
+                    dayOfMonth = index + 1,
+                    isCurrentDate = currentDate.dayOfMonth == index + 1,
+                    isSelected = index == selectedIndex,
+                    onDaySelected = { dayOfMonth ->
+                        selectedIndex = index
+                        onDateSelected(
+                            with(currentDate) {
+                                LocalDate(year, month, dayOfMonth)
+                            }
+                        )
+                    }
+                )
 
-        coroutineScope.launch {
-            listState.animateScrollToItem(selectedDate.dayOfMonth - 1)
+                LaunchedEffect(selectedIndex) {
+                    listState.animateScrollToItem(selectedIndex)
+                }
+            }
         }
     }
+}
+
+@Preview(
+    showBackground = true,
+    backgroundColor = AppTheme.Colors.primaryDark
+)
+@Composable
+fun DatePickerPreview() {
+    DatePicker(
+        currentDate = LocalDate(2021, 10, 21),
+        selectedDate = LocalDate(2021, 10, 23),
+        onDateSelected = {})
 }
 
 @Composable
@@ -150,23 +153,16 @@ fun DatePickerItem(
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = AppTheme.Colors.primaryDark
-)
 @Composable
-fun CalorieStatsPreview() {
-    CalorieStats(state = previewUiState)
-}
-
-@Composable
-fun CalorieStats(state: DailyStatsUiState) {
-    state as DailyStatsUiState.Data
-
+fun DailyStats(
+    modifier: Modifier,
+    state: HomeViewState.Data
+) {
+    val data = state.foodConsumptionData
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
     ) {
         Box(
             modifier = Modifier
@@ -181,7 +177,7 @@ fun CalorieStats(state: DailyStatsUiState) {
                     color = Color(AppTheme.Colors.textGray)
                 )
                 Text(
-                    text = state.remainingCalories.toString(),
+                    text = data.remainingCalories.toString(),
                     style = appTypography.h4.copy(fontSize = 38.sp),
                     color = Color.White
                 )
@@ -196,7 +192,7 @@ fun CalorieStats(state: DailyStatsUiState) {
                             color = Color(AppTheme.Colors.textGray)
                         )
                         Text(
-                            text = state.caloricGoal.toString(),
+                            text = data.caloricGoal.toString(),
                             style = appTypography.h5,
                             color = Color(AppTheme.Colors.textLighterGray)
                         )
@@ -211,7 +207,7 @@ fun CalorieStats(state: DailyStatsUiState) {
                             color = Color(AppTheme.Colors.textGray)
                         )
                         Text(
-                            text = state.consumedCalories.toString(),
+                            text = data.consumedCalories.toString(),
                             style = appTypography.h5,
                             color = Color(AppTheme.Colors.textLighterGray)
                         )
@@ -230,16 +226,45 @@ fun CalorieStats(state: DailyStatsUiState) {
             modifier = Modifier
                 .weight(0.4f)
         ) {
-            MacroProgressBar(label = "Protein".localized(), consumed = state.consumedProtein, goal = state.proteinGoal)
-            MacroProgressBar(label = "Carbs".localized(), consumed = state.consumedCarbs, goal = state.carbsGoal)
-            MacroProgressBar(label = "Fat".localized(), consumed = state.consumedFat, goal = state.fatGoal)
+            MacroProgressBar(
+                modifier = Modifier.padding(bottom = 20.dp),
+                label = "Protein".localized(),
+                consumed = data.consumedProtein,
+                goal = data.proteinGoal
+            )
+            MacroProgressBar(
+                modifier = Modifier.padding(bottom = 20.dp),
+                label = "Carbs".localized(),
+                consumed = data.consumedCarbs,
+                goal = data.carbsGoal
+            )
+            MacroProgressBar(
+                modifier = Modifier,
+                label = "Fat".localized(),
+                consumed = data.consumedFat,
+                goal = data.fatGoal
+            )
         }
     }
 }
 
+@Preview(
+    showBackground = true,
+    backgroundColor = AppTheme.Colors.primaryDark
+)
 @Composable
-fun MacroProgressBar(label: String, consumed: Int, goal: Int) {
-    Column {
+fun DateStatsPreview() {
+    DailyStats(modifier = Modifier, state = homeViewStatePreview)
+}
+
+@Composable
+fun MacroProgressBar(
+    modifier: Modifier,
+    label: String,
+    consumed: Int,
+    goal: Int
+) {
+    Column(modifier = modifier) {
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -261,7 +286,6 @@ fun MacroProgressBar(label: String, consumed: Int, goal: Int) {
                 .fillMaxWidth()
                 .padding(
                     top = 6.dp,
-                    bottom = 20.dp,
                     start = 3.dp,
                     end = 2.dp
                 )

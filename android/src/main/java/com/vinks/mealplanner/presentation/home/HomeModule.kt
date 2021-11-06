@@ -1,4 +1,4 @@
-package com.vinks.mealplanner.ui.home
+package com.vinks.mealplanner.presentation.home
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
