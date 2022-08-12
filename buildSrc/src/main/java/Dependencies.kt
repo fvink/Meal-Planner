@@ -1,32 +1,32 @@
 object Versions {
-    val min_sdk = 26
-    val target_sdk = 31
-    val compile_sdk = 31
+    const val min_sdk = 26
+    const val target_sdk = 32
+    const val compile_sdk = 32
 
-    val kotlin = "1.5.30"
-    val android_gradle_plugin = "7.0.2"
-    val buildToolsVersion = "30.0.3"
+    const val kotlin = "1.7.10"
+    const val android_gradle_plugin = "7.2.0"
+    const val buildToolsVersion = "30.0.3"
 
-    val kotlinxSerializationJson = "1.3.0"
-    val kotlinxDateTime = "0.3.0"
-    val coroutines = "1.5.2-native-mt"
-    val koin = "3.0.2"
-    val ktor = "1.6.4"
-    val sqlDelight = "1.5.0"
-    val napier = "2.1.0"
+    const val kotlinxSerializationJson = "1.3.3"
+    const val kotlinxDateTime = "0.4.0"
+    const val coroutines = "1.6.0-native-mt"
+    const val koin = "3.0.2"
+    const val ktor = "2.0.3"
+    const val sqlDelight = "1.5.0"
+    const val napier = "2.1.0"
 
     object AndroidX {
-        val appcompat = "1.2.0"
-        val core = "1.6.0"
-        val lifecycle = "2.4.0"
-        val test = "1.3.0"
-        val test_ext = "1.1.2"
+        const val appcompat = "1.2.0"
+        const val core = "1.6.0"
+        const val lifecycle = "2.4.0"
+        const val test = "1.3.0"
+        const val test_ext = "1.1.2"
     }
 
     object Compose {
-        const val compose = "1.0.3"
-        const val activity = "1.3.0"
-        const val accompanist = "0.20.0"
+        const val compose = "1.2.1"
+        const val activity = "1.5.1"
+        const val accompanist = "0.25.1"
     }
 }
 
@@ -92,11 +92,11 @@ object Deps {
 
     object Ktor {
         val commonCore = "io.ktor:ktor-client-core:${Versions.ktor}"
-        val commonJson = "io.ktor:ktor-client-json:${Versions.ktor}"
         val commonLogging = "io.ktor:ktor-client-logging:${Versions.ktor}"
         val okhttp = "io.ktor:ktor-client-okhttp:${Versions.ktor}"
         val ios = "io.ktor:ktor-client-ios:${Versions.ktor}"
-        val serialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
+        val serialization = "io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}"
+        val contentNegotiation = "io.ktor:ktor-client-content-negotiation:${Versions.ktor}"
     }
 
     object SqlDelight {
